@@ -30,7 +30,15 @@ mod test {
         );
         app.add_systems(
             Update,
-            |server: Res<AssetServer>, thehandle: Res<TheHandle>, mut commands: Commands| {
+            |server: Res<AssetServer>,
+             thehandle: Res<TheHandle>,
+             mut commands: Commands,
+             images: Res<Assets<Image>>| {
+                let image = images.get(thehandle.0.id());
+                if let Some(_image) = image {
+                    info!("GOT IMAGE!");
+                    commands.write_message(AppExit::Success);
+                }
                 match server.load_state(thehandle.0.id()) {
                     bevy::asset::LoadState::NotLoaded => {
                         warn!("Asset not started to load.");
